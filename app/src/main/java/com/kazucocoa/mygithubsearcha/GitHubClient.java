@@ -64,13 +64,16 @@ public class GitHubClient {
                 for (Contributor contributor : contributors) {
                     System.out.println("=======Contributor===============");
                     System.out.println(contributor.login + ": " + contributor.contributions);
+                    System.out.println("=======JSON==========");
                     System.out.println(jsonAdapterMoshi2.toJson(contributor));
+
                 }
+                System.out.println(CONTRIBUTORS_JSON_ADAPTER.toJson(contributors));
             }
         });
     }
 
-    private GitHubClient() {
+    public GitHubClient() {
         // no
     }
 }
