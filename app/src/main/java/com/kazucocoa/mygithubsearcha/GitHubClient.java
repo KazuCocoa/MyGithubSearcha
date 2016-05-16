@@ -1,11 +1,7 @@
 package com.kazucocoa.mygithubsearcha;
 
-import android.app.Activity;
-
-import com.squareup.moshi.FromJson;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-import com.squareup.moshi.ToJson;
 import com.squareup.moshi.Types;
 
 import java.io.IOException;
@@ -28,11 +24,6 @@ public class GitHubClient {
     );
     private static final JsonAdapter<Contributor> jsonAdapterMoshi2 = MOSHI.adapter(Contributor.class);
 
-
-    static class Contributor {
-        String login;
-        int contributions;
-    }
 
     public static void Github() throws Exception {
 
