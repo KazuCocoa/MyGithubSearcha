@@ -1,5 +1,8 @@
 package com.kazucocoa.mygithubsearcha;
 
+import android.support.annotation.NonNull;
+
+import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
@@ -15,17 +18,33 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okio.BufferedSource;
 
 public class GitHubClient {
     private static final String ENDPOINT = "https://api.github.com/repos/square/okhttp/contributors";
-    private static final Moshi MOSHI = new Moshi.Builder().build();
-    private static final JsonAdapter<List<Contributor>> CONTRIBUTORS_JSON_ADAPTER = MOSHI.adapter(
-            Types.newParameterizedType(List.class, Contributor.class)
-    );
-    private static final JsonAdapter<Contributor> jsonAdapterMoshi2 = MOSHI.adapter(Contributor.class);
 
+    public GitHubClient() {
+        // no
+    }
 
-    public static void Github() throws Exception {
+    // We can describe test.
+    private List<Contributor> contributors(BufferedSource bufferedSource) throws IOException {
+        JsonAdapter<List<Contributor>> adapter =
+                new Moshi.Builder().build().adapter(
+                        Types.newParameterizedType(List.class, Contributor.class)
+                );
+        return adapter.fromJson(bufferedSource);
+    }
+
+    // We can describe test.
+    @NonNull
+    private String jsonFromContributor(Contributor contributor) {
+        JsonAdapter<Contributor> adapter =
+                new Moshi.Builder().build().adapter(Contributor.class);
+        return adapter.toJson(contributor);
+    }
+
+    public void Github() throws Exception {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -42,29 +61,23 @@ public class GitHubClient {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 ResponseBody body = response.body();
-                List<Contributor> contributors = CONTRIBUTORS_JSON_ADAPTER.fromJson(body.source());
+                List<Contributor> co = contributors(body.source());
                 body.close();
 
-                Collections.sort(contributors, new Comparator<Contributor>() {
+                Collections.sort(co, new Comparator<Contributor>() {
                     @Override
                     public int compare(Contributor lhs, Contributor rhs) {
                         return lhs.contributions - rhs.contributions;
                     }
                 });
 
-                for (Contributor contributor : contributors) {
-                    System.out.println("=======Contributor===============");
+                for (Contributor contributor : co) {
                     System.out.println(contributor.login + ": " + contributor.contributions);
                     System.out.println("=======JSON==========");
-                    System.out.println(jsonAdapterMoshi2.toJson(contributor));
+                    System.out.println(jsonFromContributor(contributor));
 
                 }
-                System.out.println(CONTRIBUTORS_JSON_ADAPTER.toJson(contributors));
             }
         });
-    }
-
-    public GitHubClient() {
-        // no
     }
 }

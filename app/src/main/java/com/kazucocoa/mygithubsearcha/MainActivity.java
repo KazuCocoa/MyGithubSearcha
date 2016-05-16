@@ -11,7 +11,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         try {
-            GitHubClient.Github();
+            GitHubClient gitHubClient = new GitHubClient();
+            gitHubClient.Github();
         } catch (Exception e) {
             e.printStackTrace();
         }
