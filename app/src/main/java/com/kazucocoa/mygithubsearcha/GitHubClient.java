@@ -27,23 +27,6 @@ public class GitHubClient {
         // no
     }
 
-    // We can describe test.
-    private List<Contributor> contributors(BufferedSource bufferedSource) throws IOException {
-        JsonAdapter<List<Contributor>> adapter =
-                new Moshi.Builder().build().adapter(
-                        Types.newParameterizedType(List.class, Contributor.class)
-                );
-        return adapter.fromJson(bufferedSource);
-    }
-
-    // We can describe test.
-    @NonNull
-    private String jsonFromContributor(Contributor contributor) {
-        JsonAdapter<Contributor> adapter =
-                new Moshi.Builder().build().adapter(Contributor.class);
-        return adapter.toJson(contributor);
-    }
-
     public void Github() throws Exception {
 
         OkHttpClient client = new OkHttpClient();
@@ -61,7 +44,7 @@ public class GitHubClient {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 ResponseBody body = response.body();
-                List<Contributor> co = contributors(body.source());
+                List<Contributor> co = Contributor.contributors(body.source());
                 body.close();
 
                 Collections.sort(co, new Comparator<Contributor>() {
@@ -74,7 +57,7 @@ public class GitHubClient {
                 for (Contributor contributor : co) {
                     System.out.println(contributor.login + ": " + contributor.contributions);
                     System.out.println("=======JSON==========");
-                    System.out.println(jsonFromContributor(contributor));
+                    System.out.println(Contributor.constibutorToString(contributor));
 
                 }
             }

@@ -2,14 +2,18 @@ package com.kazucocoa.mygithubsearcha;
 
 import org.junit.Test;
 
+import java.util.List;
+
+import okio.Buffer;
+
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
-/**
- * To work on unit tests, switch the Test Artifact in the Build Variants view.
- */
 public class ExampleUnitTest {
     @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+    public void contributorsTest() throws Exception {
+        String json = "[{\"login\": \"my\", \"contributions\": 1}]";
+        List<Contributor> c = Contributor.contributors(new Buffer().writeUtf8(json));
+        assertThat(c.get(0).login, is("my"));
     }
 }
