@@ -8,6 +8,7 @@ import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import okio.BufferedSource;
@@ -15,12 +16,22 @@ import okio.BufferedSource;
 public class Contributor {
 
     public static final class Data {
-        @Nullable Contribution data;
-        @Nullable List<String> errors;
+        Contribution data;
+        List<String> errors;
 
         public Data(@Nullable Contribution data, @Nullable List<String> errors) {
-            this.data = data;
-            this.errors = errors;
+            if (data == null) {
+                this.data.login = "";
+                this.data.contributions = 0;
+            } else {
+                this.data = data;
+            }
+
+            if (errors == null) {
+                this.errors = Collections.emptyList();
+            } else {
+                this.errors = errors;
+            }
         }
     }
 

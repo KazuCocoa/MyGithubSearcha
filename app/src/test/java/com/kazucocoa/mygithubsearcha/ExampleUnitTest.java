@@ -8,7 +8,6 @@ import okio.Buffer;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 
 public class ExampleUnitTest {
@@ -24,7 +23,7 @@ public class ExampleUnitTest {
         String json = "{\"data\": {\"login\": \"my\", \"contributions\": 1}}";
         Contributor.Data d = Contributor.data(new Buffer().writeUtf8(json));
         assertThat(d.data, is(notNullValue()));
-        assertThat(d.errors, is(nullValue()));
+        assertThat(d.errors.isEmpty(), is(true));
         assertThat(d.data.login, is("my"));
     }
 
@@ -32,7 +31,8 @@ public class ExampleUnitTest {
     public void errorsTestInData() throws Exception {
         String json = "{\"errors\": [\"error1\", \"error2\"]}";
         Contributor.Data d = Contributor.data(new Buffer().writeUtf8(json));
-        assertThat(d.data, is(nullValue()));
+        assertThat(d.data.login, is(""));
+        assertThat(d.data.contributions, is(0));
         assertThat(d.errors, is(notNullValue()));
         assertThat(d.errors.get(0), is("error1"));
         assertThat(d.errors.get(1), is("error2"));
