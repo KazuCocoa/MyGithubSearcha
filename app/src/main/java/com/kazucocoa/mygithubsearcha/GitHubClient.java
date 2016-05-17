@@ -18,7 +18,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okio.BufferedSource;
 
 public class GitHubClient {
     private static final String ENDPOINT = "https://api.github.com/repos/square/okhttp/contributors";
@@ -44,17 +43,17 @@ public class GitHubClient {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 ResponseBody body = response.body();
-                List<Contributor> co = Contributor.contributors(body.source());
+                List<Contributor.Contribution> co = Contributor.contributors(body.source());
                 body.close();
 
-                Collections.sort(co, new Comparator<Contributor>() {
+                Collections.sort(co, new Comparator<Contributor.Contribution>() {
                     @Override
-                    public int compare(Contributor lhs, Contributor rhs) {
+                    public int compare(Contributor.Contribution lhs, Contributor.Contribution rhs) {
                         return lhs.contributions - rhs.contributions;
                     }
                 });
 
-                for (Contributor contributor : co) {
+                for (Contributor.Contribution contributor : co) {
                     System.out.println(contributor.login + ": " + contributor.contributions);
                     System.out.println("=======JSON==========");
                     System.out.println(Contributor.constibutorToString(contributor));

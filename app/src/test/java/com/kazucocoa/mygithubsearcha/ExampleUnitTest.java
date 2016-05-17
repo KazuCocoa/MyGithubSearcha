@@ -13,7 +13,7 @@ public class ExampleUnitTest {
     @Test
     public void contributorsTest() throws Exception {
         String json = "[{\"login\": \"my\", \"contributions\": 1}]";
-        List<Contributor> c = Contributor.contributors(new Buffer().writeUtf8(json));
+        List<Contributor.Contribution> c = Contributor.contributors(new Buffer().writeUtf8(json));
         assertThat(c.get(0).login, is("my"));
     }
 }

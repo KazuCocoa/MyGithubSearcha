@@ -12,10 +12,11 @@ import java.util.List;
 import okio.BufferedSource;
 
 public class Contributor {
-    String login;
-    int contributions;
 
-
+    public static final class Contribution {
+        String login;
+        int contributions;
+    }
 
     static public Contributor contributor(BufferedSource bufferedSource) throws IOException {
         JsonAdapter<Contributor> adapter =
@@ -25,18 +26,18 @@ public class Contributor {
         return adapter.fromJson(bufferedSource);
     }
 
-    static public List<Contributor> contributors(BufferedSource bufferedSource) throws IOException {
-        JsonAdapter<List<Contributor>> adapter =
+    static public List<Contribution> contributors(BufferedSource bufferedSource) throws IOException {
+        JsonAdapter<List<Contribution>> adapter =
                 new Moshi.Builder().build().adapter(
-                        Types.newParameterizedType(List.class, Contributor.class)
+                        Types.newParameterizedType(List.class, Contribution.class)
                 );
         return adapter.fromJson(bufferedSource);
     }
 
     @NonNull
-    static public String constibutorToString(Contributor contributor) {
-        JsonAdapter<Contributor> adapter =
-                new Moshi.Builder().build().adapter(Types.newParameterizedType(Contributor.class));
+    static public String constibutorToString(Contribution contributor) {
+        JsonAdapter<Contribution> adapter =
+                new Moshi.Builder().build().adapter(Types.newParameterizedType(Contribution.class));
         return adapter.toJson(contributor);
     }
 
