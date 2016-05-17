@@ -1,6 +1,7 @@
 package com.kazucocoa.mygithubsearcha;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -13,16 +14,25 @@ import okio.BufferedSource;
 
 public class Contributor {
 
+    public static final class Data {
+        @Nullable Contribution data;
+        @Nullable List<String> errors;
+
+        public Data(@Nullable Contribution data, @Nullable List<String> errors) {
+            this.data = data;
+            this.errors = errors;
+        }
+    }
+
     public static final class Contribution {
         String login;
         int contributions;
     }
 
-    static public Contributor contributor(BufferedSource bufferedSource) throws IOException {
-        JsonAdapter<Contributor> adapter =
-                new Moshi.Builder().build().adapter(
-                        Types.newParameterizedType(String.class, Contributor.class)
-                );
+
+    static public Data data(BufferedSource bufferedSource) throws IOException {
+        JsonAdapter<Data> adapter =
+                new Moshi.Builder().build().adapter(Data.class);
         return adapter.fromJson(bufferedSource);
     }
 
